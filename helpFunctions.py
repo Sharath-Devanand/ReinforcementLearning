@@ -48,14 +48,14 @@ random_number_partition
 3. Output - List of size m with randomly partitioned N
 """
 
-def random_number_partition(N,m,initial_value):
+def random_number_partition(N,m):
     parted = []
     L = N
     for i in range(0,m-1):
-        k = random.randint(initial_value,N)
+        k = random.randint(0,L)
         parted.append(k)
-        N = N-k
-    parted.append(L - sum(parted))
+        L = L-k
+    parted.append(N - sum(parted))
     return parted
 
 """
@@ -75,10 +75,13 @@ def generate_queue(Sum_Rmin,N):
     minRange = 10
     maxRange = 50
     F = [math.floor(random.uniform(minRange,maxRange)) for i in range(0,N)]
-    Rmin = random_number_partition(Sum_Rmin,N,1)
-
+    Rmin = random_number_partition(Sum_Rmin,N)
+    while any(elem==0 for elem in Rmin):
+        Rmin = random_number_partition(Sum_Rmin,N)
+    
+    
+    print(len(Rmin),len(F),N)
     d = [round(F[i]/Rmin[i],1) for i in range(0,N)]
-
     queue = np.zeros([N,4])
     v = [0 for i in range(0,N)]
     queue[:,0] = Rmin
@@ -179,7 +182,7 @@ def random_rate_scheduler(queue, N, B):
         N_active = N-count
         if N_active==0:
             break
-        pace = random_number_partition(B,N_active,0)
+        pace = random_number_partition(B,N_active)
         
         
         pace_upd = [0 for i in range(0,N)]
