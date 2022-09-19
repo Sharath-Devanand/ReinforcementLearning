@@ -78,9 +78,8 @@ def generate_queue(Sum_Rmin,N):
     Rmin = random_number_partition(Sum_Rmin,N)
     while any(elem==0 for elem in Rmin):
         Rmin = random_number_partition(Sum_Rmin,N)
-    
-    
-    print(len(Rmin),len(F),N)
+
+    #print(len(Rmin),len(F),N)
     d = [round(F[i]/Rmin[i],1) for i in range(0,N)]
     queue = np.zeros([N,4])
     v = [0 for i in range(0,N)]
