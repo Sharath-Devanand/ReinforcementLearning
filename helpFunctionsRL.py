@@ -1,7 +1,7 @@
 import itertools
 import operator
-import numpy as np
 import random
+import numpy as np
 
 def allStates(r,n):
    size = n + r - 1
@@ -61,55 +61,27 @@ def checkIfAllNegative(someList):
         binary = True
     return binary
 
-"""
-def temperoaryName2(qTable,p_exp, allPossibleStates, actions,i):
-    check3 = np.count_nonzero(qTable)/(np.shape(qTable[0])*np.shape(qTable[1]))
-    
-    if check3<=1-p_exp[i]:
+def actionByAgent(qTable,p_exp,currentState,allPossibleStates,allPossibleActions,actions):
+    fillPercentage = np.count_nonzero(qTable)/(np.shape(qTable)[0]*np.shape(qTable)[1])
+            
+    if fillPercentage<=1-p_exp:
         currentActionIndex = random.randint(0,len(actions)-1)
     else:
-        #print(p_exp[i])
+        L = len(currentState)
         indexCurrentState = allPossibleStates.index(tuple(currentState))
-        maxValue = max(qTable[indexCurrentState][:])
-        currentACtionIndex = np.where(qTable==maxValue)[1][0]
-        #print(currentACtionIndex)
+        listOfActionIndices = [i for i in range(len(allPossibleActions)) if len(allPossibleActions[i])==L]
+        currentActionIndex = np.argmax(qTable[indexCurrentState][listOfActionIndices],axis=0)
+    return currentActionIndex
 
-    rewardAction = np.array(actions[currentActionIndex])
-    nextState = np.array(currentState) - rewardAction
+## Deleting Nodes with negative rates from the index values given from checkIfOneNegative function
+## Check deadline of completed nodes with time and update value
 
-    temperoryName1()
-
-    currentState = nextState
-    
-    
-    check = checkIfAllNegative(currentState)
-
-    time = time+1
-
-
-def temperoryName1(nextState, queue, time, rewardAction, allPossibleStates, currentActionIndex, qTable, beta, N,B):
-    check2 = checkIfOneNegative(nextState)
-    if check2[0]:
-        listCurrentState = list(nextState)
-        enum = enumerate(listCurrentState)
-        for j in list(reversed(check2[1])):
-            del listCurrentState[j]
-            if queue[j,1]<time:
-                queue[j,3]=1
-
-        nextState = tuple(listCurrentState)
-
-        currentState = nextState
-
-        check = checkIfAllNegative(nextState)
-        if check:
-            update = reward(nextState, rewardAction)
-            xCoord = allPossibleStates.index(tuple(nextState))
-            qTable[xCoord, currentActionIndex] += beta*update
-        
-        M = N - len(check2[1])
-        if M==0:
-            return
-        actions = list(allStates(B,M))
-"""
+def deleteElement(queue,nextState,indices,time):
+    listNextState = list(nextState)
+    for j in list(reversed(indices)):
+        del listNextState[j]
+        if queue[j,1]<time:
+            queue[j,3]=1
+    nextState = tuple(listNextState)
+    return [nextState,queue]
     
