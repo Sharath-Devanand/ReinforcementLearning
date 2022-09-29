@@ -37,6 +37,18 @@ def reward(state,action):
     rewardValue = sum(SIR)
     return rewardValue
 
+def reward2(queue,action,time):
+    N = queue.shape[0]
+    drem = []
+    for i in range(0,N):
+        drem.append(queue[i][1]-time)
+    drem_max = max(drem)
+    SIR = []
+    for i in range(0,N):
+        SIR.append((drem_max-drem[i])*action[i])
+    rewardValue = sum(SIR)
+    return rewardValue
+
 def checkIfOneNegative(someList):
     L = len(someList)
     indices = []
@@ -84,4 +96,17 @@ def deleteElement(queue,nextState,indices,time):
             queue[j,3]=1
     nextState = tuple(listNextState)
     return [nextState,queue]
-    
+
+def randomPolicy(allPossibleStates,allPossibleActions):
+    L1 = len(allPossibleStates)
+    L2 = len(allPossibleActions)
+    policyTable = np.zeros([L1,L2])
+    for i in range(L1):
+        matchIndices = []
+        for j in range(L2):
+            if len(allPossibleStates[i])==len(allPossibleActions[j]):
+                matchIndices.append(j)
+        L = len(matchIndices)
+        for k in matchIndices:
+            policyTable[i,k] = round(1/L,2)
+    return policyTable
